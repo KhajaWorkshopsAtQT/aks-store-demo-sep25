@@ -1,0 +1,25 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  
+jobs:
+
+  build:
+
+    runs-on: self-hosted
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Build the Docker image
+      run: docker build . --file src/product-service/Dockerfile --tag my-image-name:latest
+    - name: Setup Trivy (optional, if not pre-installed)
+      uses: aquasecurity/setup-trivy@v2 # Use this if Trivy isn't already on the runner
+
+    - name: Run Trivy vulnerability scan
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: my-image-name:latest # Or other scan targets like 'fs', 'repo'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
