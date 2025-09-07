@@ -26,3 +26,7 @@ jobs:
         image-ref: my-image-name:latest # Or other scan targets like 'fs', 'repo'
         format: 'sarif'
         output: 'trivy-results.sarif'
+    - name: Upload Trivy results to GitHub Code Scanning
+      uses: github/codeql-action/upload-sarif@v3
+      with:
+        sarif_file: 'trivy-results.sarif'
